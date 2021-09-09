@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using NorthWind.Configure;
 using NorthWind.Data;
@@ -34,7 +35,8 @@ namespace NorthWind
             services.AddDbContext<AppDbContext>(options => options.UseMySql(connectionString,
                 new MySqlServerVersion(new Version(8, 0, 26))));
 
-
+            services.AddDefaultIdentity<User>()
+                .AddEntityFrameworkStores<AppDbContext>();
             services.AddRazorPages();
         }
 
@@ -56,6 +58,9 @@ namespace NorthWind
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseAuthorization();
 
