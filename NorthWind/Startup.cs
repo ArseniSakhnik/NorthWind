@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Core.Entities;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using NorthWind.Configure;
 using NorthWind.Data;
@@ -37,6 +38,13 @@ namespace NorthWind
 
             services.AddDefaultIdentity<User>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<User, AppDbContext>();
+
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
+
             services.AddRazorPages();
         }
 
@@ -61,6 +69,7 @@ namespace NorthWind
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseIdentityServer();
 
             app.UseAuthorization();
 
