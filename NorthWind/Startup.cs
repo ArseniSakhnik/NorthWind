@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using NorthWind.Configure;
 using NorthWind.Data;
+using VueCliMiddleware;
 
 namespace NorthWind
 {
@@ -44,6 +45,13 @@ namespace NorthWind
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
+            
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp";
+            });
+            
+            services.AddControllers();
 
             services.AddRazorPages();
         }
@@ -74,6 +82,23 @@ namespace NorthWind
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
+            
+            app.UseSpa(spa =>
+            {
+                if (env.IsDevelopment())
+                {
+                    spa.Options.SourcePath = "ClientApp/";
+                }
+                else
+                {
+                    spa.Options.SourcePath = "dist";
+                }
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseVueCli("serve");
+                }
+            });
         }
     }
 }
